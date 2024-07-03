@@ -231,7 +231,7 @@ def in2po(expr):
 
     return "".join(postfix)
 
-print(in2po("a+b"))            
+# print(in2po("a+b"))            
 
 #Q2: prefix to infix
 #i/p: +ab
@@ -253,7 +253,7 @@ def prefix2infix(expr):
 
     return stack[-1]
 
-print(prefix2infix("+ab"))
+# print(prefix2infix("+ab"))
 
 #Q3: prefix to postfix expression
 
@@ -272,4 +272,72 @@ def prefix2postfix(expr):
             stack.append(char)
 
     return stack[-1]
-print(prefix2postfix("+ab"))
+# print(prefix2postfix("+ab"))
+
+#Q4: postfix to prefix expression
+
+def postfix2prefix(expr):
+    stack = []
+
+    operators = ['+',"-",'/','*','^']
+
+    for char in expr:
+        if char in operators:
+            op1 = stack.pop()
+            op2 = stack.pop()
+            stack.append(f"{char}{op2}{op1}")
+        else:
+            stack.append(char)
+
+    return stack[-1]
+
+print(postfix2prefix("ab+"))
+print(postfix2prefix("ab+c*"))
+
+#Q5: postfix2infix
+
+def postfix2infix(expr):
+    stack = []
+
+    operators = ['+',"-",'/','*','^']
+
+    for char in expr:
+        if char in operators:
+            op1 = stack.pop()
+            op2 = stack.pop()
+            stack.append(f"{op2}{char}{op1}")
+        else:
+            stack.append(char)    
+
+    return stack[-1]
+
+print(postfix2infix("ab+"))
+
+#Q6: infix to prefix
+
+def infix2prefix(expr):
+    prec = {'+': 1, '-': 1, '*': 2, '/': 2, '^': 3}
+
+    prefixlist = []
+    stack = []
+
+    # Reverse the infix expression
+    expr = expr[::-1]
+
+    # Iterate through each character in the reversed expression
+    for char in expr:
+        if char.isalnum():
+            prefixlist.append(char)
+        else:
+            while stack and prec[char] < prec[stack[-1]]:
+                prefixlist.append(stack.pop())
+            stack.append(char)
+
+    # Pop all remaining operators from the stack
+    while stack:
+        prefixlist.append(stack.pop())
+
+    # Reverse the prefixlist to get the final prefix expression
+    return "".join(prefixlist[::-1])
+
+print(infix2prefix("a+b"))
